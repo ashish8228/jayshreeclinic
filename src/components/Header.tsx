@@ -178,7 +178,7 @@ export default function Header() {
 
         <Link href="/#home" className="relative z-10 lg:order-2">
           <Image
-            src="/images/Logo.png"
+            src="./images/Logo.png"
             alt="Clinic Logo"
             width={70}
             height={60}

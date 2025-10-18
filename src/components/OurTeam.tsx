@@ -12,7 +12,7 @@ const teamMembers = [
             'Top 30 Aesthetic Dermatologist - IJD',
             'Most Trusted Doctor Award 2022',
         ],
-        imgSrc: '/images/doctor_img.png',
+        imgSrc: './images/doctor_img.png',
         imgAlt: 'Dr. Seepika Jaiswal',
     },
     {
@@ -24,7 +24,7 @@ const teamMembers = [
             'Honorary Doctorate Award',
             'Derma Nutritionist Certification',
         ],
-        imgSrc: '/images/male_doctor.png',
+        imgSrc: './images/male_doctor.png',
         imgAlt: 'Dr. Hari Mohan Rai',
     },
 ];
