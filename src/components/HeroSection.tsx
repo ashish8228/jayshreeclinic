@@ -91,7 +91,7 @@ export default function HeroSection() {
               })}
             </div>
             <Image
-              src="/images/doctor_img.png"
+              src="./images/doctor_img.png"
               alt="Doctor Image"
               fill
               className="object-cover rounded-2xl"
