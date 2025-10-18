@@ -57,8 +57,7 @@ Ensure you have the following installed:
    ```bash
    npm run dev
 
-2.**open your browser and visit:**
+2. **open your browser and visit:**
    ```bash
    http://localhost:3000
-
 
