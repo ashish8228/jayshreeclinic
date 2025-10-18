@@ -40,10 +40,10 @@ export default function Footer() {
         <div>
           <h3 className="font-bold text-white mb-4">Working Hours</h3>
           <ul className="space-y-2 text-sm">
-            <li className="hover:text-white transition">Mon - Sat: 11 AM - 7 PM</li>
-            <li className="hover:text-white transition">Sunday: By Appointment</li>
+            <li className="hover:text-white transition">Mon - Sat: <span className="font-medium">11:00 AM – 1:00 PM </span> &amp; <br /><span className="font-medium"> 4:00 PM – 7:00 PM</span></li>
           </ul>
         </div>
+
 
         {/* Column 4: Social Media Icons */}
         <div>
