@@ -46,7 +46,7 @@ export default function TestimonialSection() {
                             <hr className="border-t border-gray-300 w-2/3 mt-2" />
                         </div>
                     </div>
-                    <AnimatePresence initial={false} mode="wait">
+                    <AnimatePresence initial={false} mode="sync">
                         {pageTestimonials.map((testimonial) => (
                             <motion.div
                                 key={testimonial.name + testimonial.location}

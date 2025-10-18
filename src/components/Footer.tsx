@@ -49,13 +49,13 @@ export default function Footer() {
         <div>
           <h3 className="font-bold text-white mb-4">Social Media</h3>
           <div className="flex gap-4">
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-gray-200 hover:text-white transition">
+            <a href="https://www.instagram.com/seepiseeps?igsh=aTV4cHl2cTRpd3hu" target="_blank" rel="noopener noreferrer" className="text-gray-200 hover:text-white transition">
               <FaInstagram size={22} />
             </a>
             <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-gray-200 hover:text-white transition">
               <FaFacebookF size={22} />
             </a>
-            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="text-gray-200 hover:text-white transition">
+            <a href="https://www.youtube.com/@DrSeepikaJaiswal" target="_blank" rel="noopener noreferrer" className="text-gray-200 hover:text-white transition">
               <FaYoutube size={22} />
             </a>
             <a href="https://wa.me/918957132986" target="_blank" rel="noopener noreferrer" className="text-gray-200 hover:text-white transition">

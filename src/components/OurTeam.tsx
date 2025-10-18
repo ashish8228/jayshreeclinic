@@ -12,7 +12,7 @@ const teamMembers = [
             'Top 30 Aesthetic Dermatologist - IJD',
             'Most Trusted Doctor Award 2022',
         ],
-        imgSrc: './images/doctor_img.png',
+        imgSrc: '/images/doctor_img.png',
         imgAlt: 'Dr. Seepika Jaiswal',
     },
     {
@@ -24,7 +24,7 @@ const teamMembers = [
             'Honorary Doctorate Award',
             'Derma Nutritionist Certification',
         ],
-        imgSrc: './images/male_doctor.png',
+        imgSrc: '/images/male_doctor.png',
         imgAlt: 'Dr. Hari Mohan Rai',
     },
 ];
@@ -47,18 +47,18 @@ export default function OurTeam() {
                         return (
                             <motion.div
                                 key={member.name}
-                                className={`flex flex-col lg:flex-row items-center bg-gray-100 rounded-2xl shadow overflow-hidden ${isEven ? '' : 'lg:flex-row-reverse'
+                                className={`flex flex-col md:flex-row items-center bg-gray-100 rounded-2xl shadow overflow-hidden ${isEven ? '' : 'md:flex-row-reverse'
                                     }`}
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ duration: 0.6 }}
                             >
-                                <div className={`relative w-full lg:w-1/3 h-55 lg:h-80 rounded-2xl bg-red-200`}>
+                                <div className={`relative w-full md:w-1/3 h-55 md:h-80 rounded-2xl bg-red-200`}>
                                     <Image src={member.imgSrc}
                                         alt={member.imgAlt}
                                         fill
-                                        className={idx === 0 ? 'object-contain lg:object-contain' : 'object-cover lg:object-cover'}
+                                        className={idx === 0 ? 'object-contain md:object-cover' : 'object-cover md:object-cover'}
                                         priority />
                                 </div>
 

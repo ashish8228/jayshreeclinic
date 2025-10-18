@@ -157,13 +157,14 @@ export default function Header() {
 
         <Link href="/#home" className="relative z-10 lg:order-2">
           <Image
-            src="./images/Logo.png"
+            src="/images/Logo.png"
             alt="Clinic Logo"
             width={70}
             height={60}
             className="w-[50px] sm:w-[60px] lg:w-[70px] h-auto object-contain rounded-full"
             priority
           />
+
         </Link>
 
         {/* Desktop Left Menu (no icons) */}
@@ -171,11 +172,10 @@ export default function Header() {
           {menuItemsLeft.map(({ id, label }) => (
             <li
               key={id}
-              ref={(el) => {(leftRefs.current[id] = el)}}
+              ref={(el) => { (leftRefs.current[id] = el) }}
               onClick={() => handleSetActive(id)}
-              className={`px-4 py-2 rounded-lg cursor-pointer ${
-                active === id ? 'text-gray-700' : 'text-gray-700 hover:text-[var(--color-accent)]'
-              }`}
+              className={`px-4 py-2 rounded-lg cursor-pointer ${active === id ? 'text-gray-700' : 'text-gray-700 hover:text-[var(--color-accent)]'
+                }`}
             >
               <a href={`#${id}`} onClick={e => e.preventDefault()}>
                 {label}
@@ -189,11 +189,10 @@ export default function Header() {
           {menuItemsRight.map(({ id, label }) => (
             <li
               key={id}
-              ref={(el) => {(rightRefs.current[id] = el)}}
+              ref={(el) => { (rightRefs.current[id] = el) }}
               onClick={() => handleSetActive(id)}
-              className={`px-4 py-2 rounded-lg cursor-pointer ${
-                active === id ? 'text-gray-700' : 'text-gray-700 hover:text-[var(--color-accent)]'
-              }`}
+              className={`px-4 py-2 rounded-lg cursor-pointer ${active === id ? 'text-gray-700' : 'text-gray-700 hover:text-[var(--color-accent)]'
+                }`}
             >
               <a href={`#${id}`} onClick={e => e.preventDefault()}>
                 {label}
@@ -249,9 +248,8 @@ export default function Header() {
                 <li
                   key={id}
                   onClick={() => handleSetActive(id)}
-                  className={`flex items-center gap-2 px-4 py-3 rounded-lg border-b border-gray-100 cursor-pointer ${
-                    active === id ? 'bg-[var(--color-accent)]' : 'text-gray-700 hover:bg-gray-100'
-                  }`}
+                  className={`flex items-center gap-2 px-4 py-3 rounded-lg border-b border-gray-100 cursor-pointer ${active === id ? 'bg-[var(--color-accent)]' : 'text-gray-700 hover:bg-gray-100'
+                    }`}
                 >
                   {icon}
                   <a href={`#${id}`} onClick={e => e.preventDefault()}>
