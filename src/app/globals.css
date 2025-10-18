@@ -15,6 +15,9 @@
 }
 
 
+html, body {
+  overflow-x: hidden;
+}
 
 
 /* Body uses Lato (or Open Sans) */

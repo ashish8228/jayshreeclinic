@@ -4,17 +4,25 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { HiMenuAlt3 } from 'react-icons/hi';
+import { IoClose } from 'react-icons/io5';
+import { AiOutlineHome } from 'react-icons/ai';
+import { MdMedicalServices } from 'react-icons/md';
+import { FaUsers } from 'react-icons/fa';
+import { FaCommentDots } from 'react-icons/fa';
+import { GiChoice } from 'react-icons/gi';
+import { FiMail } from 'react-icons/fi';
 
 const menuItemsLeft = [
-  { id: 'home', label: 'Home' },
-  { id: 'services', label: 'Services' },
-  { id: 'team', label: 'Our Team' },
+  { id: 'home', label: 'Home', icon: <AiOutlineHome /> },
+  { id: 'services', label: 'Services', icon: <MdMedicalServices /> },
+  { id: 'team', label: 'Our Team', icon: <FaUsers /> },
 ];
 
 const menuItemsRight = [
-  { id: 'testimonials', label: 'Testimonials' },
-  { id: 'whychooseus', label: 'Why choose us' },
-  { id: 'contact', label: 'Contact Us' },
+  { id: 'testimonials', label: 'Testimonials', icon: <FaCommentDots /> },
+  { id: 'whychooseus', label: 'Why choose us', icon: <GiChoice /> },
+  { id: 'contact', label: 'Contact Us', icon: <FiMail /> },
 ];
 
 export default function Header() {
@@ -25,11 +33,10 @@ export default function Header() {
   const rightRefs = useRef<Record<string, HTMLLIElement | null>>({});
   const navRef = useRef<HTMLElement | null>(null);
 
-  // manual click guard so observer doesn't override during smooth scroll
   const manualTargetRef = useRef<string | null>(null);
   const manualClearTimer = useRef<number | null>(null);
 
-  const [buttonStyle, setButtonStyle] = useState<{ left: number; top: number; width: number; height: number }>({
+  const [buttonStyle, setButtonStyle] = useState({
     left: 0,
     top: 0,
     width: 0,
@@ -40,18 +47,17 @@ export default function Header() {
     const el = document.getElementById(id);
     if (!el) return;
     const header = navRef.current;
-    const headerHeight = header ? (header as HTMLElement).getBoundingClientRect().height : 90;
+    const headerHeight = header?.getBoundingClientRect().height ?? 90;
     const top = el.getBoundingClientRect().top + window.pageYOffset - headerHeight + 8;
     window.scrollTo({ top, behavior: 'smooth' });
   }
 
-  // update highlight position relative to nav
   useEffect(() => {
-    const activeElement = leftRefs.current[active] || rightRefs.current[active] || null;
-    const navElement = navRef.current;
-    if (activeElement && navElement) {
-      const rect = activeElement.getBoundingClientRect();
-      const navRect = navElement.getBoundingClientRect();
+    const activeEl = leftRefs.current[active] || rightRefs.current[active];
+    const navEl = navRef.current;
+    if (activeEl && navEl) {
+      const rect = activeEl.getBoundingClientRect();
+      const navRect = navEl.getBoundingClientRect();
       setButtonStyle({
         left: rect.left - navRect.left,
         top: rect.top - navRect.top,
@@ -62,15 +68,11 @@ export default function Header() {
   }, [active]);
 
   function handleSetActive(id: string) {
-    // set manual guard so IntersectionObserver doesn't override while scrolling
     manualTargetRef.current = id;
-
-    // clear existing timer
     if (manualClearTimer.current) {
       window.clearTimeout(manualClearTimer.current);
       manualClearTimer.current = null;
     }
-    // safety: clear manual guard after 4s if something goes wrong
     manualClearTimer.current = window.setTimeout(() => {
       manualTargetRef.current = null;
       manualClearTimer.current = null;
@@ -78,37 +80,24 @@ export default function Header() {
 
     setActive(id);
     setIsMobileMenuOpen(false);
-
-    if (typeof window !== 'undefined') {
-      history.replaceState(null, '', `#${id}`);
-    }
-
-    // let React paint the layout change so motion/layout animation starts, then scroll
+    history.replaceState(null, '', `#${id}`);
     requestAnimationFrame(() => scrollToId(id));
   }
 
-  // IntersectionObserver to set `active` on scroll, respects manualTargetRef
   useEffect(() => {
     if (typeof window === 'undefined') return;
-
-    const header = navRef.current;
-    const headerHeight = header ? header.getBoundingClientRect().height : 90;
-
+    const headerHeight = navRef.current?.getBoundingClientRect().height ?? 90;
     const sectionIds = [...menuItemsLeft, ...menuItemsRight].map(i => i.id);
-    const sections: HTMLElement[] = sectionIds
-      .map(id => document.getElementById(id))
-      .filter(Boolean) as HTMLElement[];
-
-    if (sections.length === 0) return;
+    const sections = sectionIds.map(id => document.getElementById(id)).filter(Boolean) as HTMLElement[];
+    if (!sections.length) return;
 
     const observer = new IntersectionObserver(
       entries => {
-        const manualTarget = manualTargetRef.current;
-
-        if (manualTarget) {
-          const targetEntry = entries.find(e => (e.target as HTMLElement).id === manualTarget);
-          if (targetEntry && targetEntry.isIntersecting) {
-            setActive(manualTarget);
+        const manual = manualTargetRef.current;
+        if (manual) {
+          const entry = entries.find(e => (e.target as HTMLElement).id === manual);
+          if (entry?.isIntersecting) {
+            setActive(manual);
             manualTargetRef.current = null;
             if (manualClearTimer.current) {
               window.clearTimeout(manualClearTimer.current);
@@ -117,38 +106,28 @@ export default function Header() {
           }
           return;
         }
-
-        const visibleEntries = entries.filter(e => e.isIntersecting);
-
-        if (visibleEntries.length > 0) {
-          visibleEntries.sort((a, b) => (b.intersectionRatio || 0) - (a.intersectionRatio || 0));
-          const top = visibleEntries[0];
-          const id = (top.target as HTMLElement).id;
-          setActive(prev => (prev === id ? prev : id));
+        const visible = entries.filter(e => e.isIntersecting);
+        if (visible.length) {
+          visible
+            .sort((a, b) => (b.intersectionRatio || 0) - (a.intersectionRatio || 0));
+          setActive((visible[0].target as HTMLElement).id);
         } else {
-          const byTop = sections
+          const closest = sections
             .map(s => ({ id: s.id, top: Math.abs(s.getBoundingClientRect().top - headerHeight) }))
-            .sort((a, b) => a.top - b.top);
-          if (byTop.length) setActive(byTop[0].id);
+            .sort((a, b) => a.top - b.top)[0];
+          setActive(closest.id);
         }
       },
-      {
-        root: null,
-        rootMargin: `-${headerHeight}px 0px 0px 0px`,
-        threshold: [0.25, 0.5, 0.75],
-      }
+      { root: null, rootMargin: `-${headerHeight}px 0px 0px 0px`, threshold: [0.25, 0.5, 0.75] }
     );
 
     sections.forEach(s => observer.observe(s));
-
     return () => {
       observer.disconnect();
       if (manualClearTimer.current) {
         window.clearTimeout(manualClearTimer.current);
-        manualClearTimer.current = null;
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const allMenuItems = [...menuItemsLeft, ...menuItemsRight];
@@ -157,7 +136,7 @@ export default function Header() {
     <>
       <nav
         ref={navRef}
-        className="top-0 left-0 flex items-center justify-between lg:justify-around px-8 py-2 border-b border-gray-200 bg-white font-heading h-[70px] lg:h-[90px] w-full z-50 fixed"
+        className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between lg:justify-around w-full h-[70px] lg:h-[90px] px-8 py-2 bg-white border-b border-gray-200 font-heading"
       >
         <motion.div
           layout
@@ -170,8 +149,8 @@ export default function Header() {
             width: buttonStyle.width,
             height: buttonStyle.height,
             backgroundColor: 'var(--color-accent)',
-            zIndex: -1,
             borderRadius: '8px',
+            zIndex: -1,
           }}
           className="hidden lg:block"
         />
@@ -182,57 +161,80 @@ export default function Header() {
             alt="Clinic Logo"
             width={70}
             height={60}
-            sizes="(max-width: 480px) 50px, (max-width: 768px) 60px, 70px"
-            className=" w-[50px] sm:w-[60px] lg:w-[70px] h-auto object-contain rounded-full"
+            className="w-[50px] sm:w-[60px] lg:w-[70px] h-auto object-contain rounded-full"
             priority
           />
         </Link>
 
-        <ul className="hidden lg:flex gap-20 text-base font-semibold relative z-10 lg:order-1">
+        {/* Desktop Left Menu (no icons) */}
+        <ul className="hidden lg:flex gap-20 relative z-10 lg:order-1 text-base font-semibold">
           {menuItemsLeft.map(({ id, label }) => (
             <li
               key={id}
-              ref={el => {
-                leftRefs.current[id] = el;
-              }}
+              ref={(el) => {(leftRefs.current[id] = el)}}
               onClick={() => handleSetActive(id)}
-              className={`cursor-pointer px-4 py-2 rounded-lg ${active === id ? 'text-gray-700' : 'text-gray-700 hover:text-[var(--color-accent)]'}`}
+              className={`px-4 py-2 rounded-lg cursor-pointer ${
+                active === id ? 'text-gray-700' : 'text-gray-700 hover:text-[var(--color-accent)]'
+              }`}
             >
-              <a href={`#${id}`} onClick={(e) => e.preventDefault()}>
-                <span>{label}</span>
+              <a href={`#${id}`} onClick={e => e.preventDefault()}>
+                {label}
               </a>
             </li>
           ))}
         </ul>
 
-        <ul className="hidden lg:flex gap-20 text-base font-semibold relative z-10 lg:order-3">
+        {/* Desktop Right Menu (no icons) */}
+        <ul className="hidden lg:flex gap-20 relative z-10 lg:order-3 text-base font-semibold">
           {menuItemsRight.map(({ id, label }) => (
             <li
               key={id}
-              ref={el => {
-                rightRefs.current[id] = el;
-              }}
+              ref={(el) => {(rightRefs.current[id] = el)}}
               onClick={() => handleSetActive(id)}
-              className={`cursor-pointer px-4 py-2 rounded-lg ${active === id ? 'text-gray-700' : 'text-gray-700 hover:text-[var(--color-accent)]'}`}
+              className={`px-4 py-2 rounded-lg cursor-pointer ${
+                active === id ? 'text-gray-700' : 'text-gray-700 hover:text-[var(--color-accent)]'
+              }`}
             >
-              <a href={`#${id}`} onClick={(e) => e.preventDefault()}>
-                <span>{label}</span>
+              <a href={`#${id}`} onClick={e => e.preventDefault()}>
+                {label}
               </a>
             </li>
           ))}
         </ul>
 
+        {/* Mobile Toggle Button */}
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="lg:hidden relative z-10 flex flex-col justify-center items-center w-10 h-10 gap-1.5"
+          className="lg:hidden relative z-10 flex items-center justify-center w-10 h-10 text-gray-700 hover:text-[var(--color-primary)] transition-colors"
           aria-label="Toggle menu"
         >
-          <motion.span animate={isMobileMenuOpen ? { rotate: 45, y: 8 } : { rotate: 0, y: 0 }} className="w-6 h-0.5 bg-gray-700 transition-transform duration-60 ease-in-out" />
-          <motion.span animate={isMobileMenuOpen ? { opacity: 0 } : { opacity: 1 }} className="w-6 h-0.5 bg-gray-700 transition-transform duration-60 ease-in-out" />
-          <motion.span animate={isMobileMenuOpen ? { rotate: -45, y: -8 } : { rotate: 0, y: 0 }} className="w-6 h-0.5 bg-gray-700 transition-transform duration-60 ease-in-out" />
+          <AnimatePresence mode="wait">
+            {isMobileMenuOpen ? (
+              <motion.div
+                key="close"
+                initial={{ rotate: -90, opacity: 0 }}
+                animate={{ rotate: 0, opacity: 1 }}
+                exit={{ rotate: 90, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <IoClose className="w-8 h-8" />
+              </motion.div>
+            ) : (
+              <motion.div
+                key="menu"
+                initial={{ rotate: 90, opacity: 0 }}
+                animate={{ rotate: 0, opacity: 1 }}
+                exit={{ rotate: -90, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <HiMenuAlt3 className="w-7 h-7" />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </button>
       </nav>
 
+      {/* Mobile Menu (icons shown) */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
@@ -243,14 +245,17 @@ export default function Header() {
             className="fixed top-[70px] left-0 w-full h-[calc(100vh-90px)] bg-white z-40 lg:hidden overflow-y-auto"
           >
             <ul className="flex flex-col p-8 gap-6 text-lg font-semibold">
-              {allMenuItems.map(({ id, label }) => (
+              {allMenuItems.map(({ id, label, icon }) => (
                 <li
                   key={id}
-                  onClick={() => { handleSetActive(id); }}
-                  className={`cursor-pointer px-4 py-3 rounded-lg border-b border-gray-100 ${active === id ? 'bg-[var(--color-accent)] ' : 'text-gray-700 hover:bg-gray-100'}`}
+                  onClick={() => handleSetActive(id)}
+                  className={`flex items-center gap-2 px-4 py-3 rounded-lg border-b border-gray-100 cursor-pointer ${
+                    active === id ? 'bg-[var(--color-accent)]' : 'text-gray-700 hover:bg-gray-100'
+                  }`}
                 >
-                  <a href={`#${id}`} onClick={(e) => e.preventDefault()}>
-                    <span>{label}</span>
+                  {icon}
+                  <a href={`#${id}`} onClick={e => e.preventDefault()}>
+                    {label}
                   </a>
                 </li>
               ))}
