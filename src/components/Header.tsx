@@ -161,7 +161,7 @@ export default function Header() {
             alt="Clinic Logo"
             width={70}
             height={60}
-            className="w-[50px] sm:w-[60px] lg:w-[70px] h-auto object-contain rounded-full"
+            className="w-[50px] sm:w-[60px] lg:w-[60px] h-auto object-contain rounded-full"
             priority
           />
 
